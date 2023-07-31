@@ -30,4 +30,20 @@ public class Comment extends TimeStamped {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<CommentLike> commentLikes = new ArrayList<>();
+
+    public Comment(String body) {
+        this.body = body;
     }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+}

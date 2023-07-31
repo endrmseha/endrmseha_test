@@ -16,6 +16,7 @@ public class CommentResponseDto extends ApiResponseDto {
     private LocalDateTime modifiedAt;
 
     public CommentResponseDto(Comment comment) {
+        super();
         this.body = comment.getBody();
         this.username = comment.getUser().getUsername();
         this.likeCount = comment.getCommentLikes().size();
