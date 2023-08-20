@@ -1,6 +1,8 @@
 package com.sparta.endrmseha_test.entity;
 
+import com.sparta.endrmseha_test.dto.CommentUpdateRequestDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,42 +10,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
 @NoArgsConstructor
-@Table(name = "comment")
-public class Comment extends TimeStamped {
+@Getter
+public class Comment extends TimeStamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String body;
+    private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> child = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    private List<CommentLike> commentLikes = new ArrayList<>();
 
-    public Comment(String body) {
-        this.body = body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setPost(Post post) {
+    @Builder
+    public Comment(String content, Post post, User user) {
+        this.content = content;
         this.post = post;
-    }
-
-    public void setUser(User user) {
         this.user = user;
     }
+
+    public void addParent(Comment comment) {
+        this.parent = comment;
+    }
+
+    public void update(CommentUpdateRequestDto requestDto) {
+        this.content = requestDto.getContent();
+    }
+
+
 }
