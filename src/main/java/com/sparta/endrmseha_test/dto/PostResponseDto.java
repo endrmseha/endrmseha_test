@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class PostResponseDto extends ApiResponseDto{
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String username;
-    private List<CommentResponseDto> comments;
+    private List<CommentResponseDto> commentList;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -28,9 +29,10 @@ public class PostResponseDto extends ApiResponseDto{
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.username = post.getUser().getUsername();
-        this.comments = post.getComments().stream()
+        this.commentList = post.getCommentList().stream()
+                .filter(childComment -> childComment.getParent() == null) // 필터링: 상위 레벨 댓글만 포함
                 .map(CommentResponseDto::new)
-                .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순
-                .toList();
+                .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
+                .collect(Collectors.toList());
     }
 }
