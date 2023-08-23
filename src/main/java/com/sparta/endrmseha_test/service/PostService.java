@@ -8,6 +8,7 @@ import com.sparta.endrmseha_test.entity.User;
 import com.sparta.endrmseha_test.entity.UserRoleEnum;
 import com.sparta.endrmseha_test.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class PostService {
     }
 
     public PostListResponseDto getPosts() {
-        List<PostResponseDto> postList = postRepository.findAll().stream()
+        List<PostResponseDto> postList = postRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
 
