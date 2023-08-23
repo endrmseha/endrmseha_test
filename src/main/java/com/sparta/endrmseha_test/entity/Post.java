@@ -33,7 +33,7 @@ public class Post extends TimeStamped{
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<PostLike> postLikes = new ArrayList<>();
+    private List<LikePost> likePost = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();

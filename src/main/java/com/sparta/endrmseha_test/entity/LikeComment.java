@@ -5,24 +5,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor
-@Table(name = "post_like")
-public class PostLike extends TimeStamped {
+@Getter
+public class LikeComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    private Comment comment;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
-
-    public PostLike(User user, Post post) {
+    public LikeComment(Comment comment, User user) {
+        this.comment = comment;
         this.user = user;
-        this.post = post;
     }
 }
